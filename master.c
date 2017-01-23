@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 
  	logicalClock_t *log_clock;
 	pid_t wpid;
-  mymsg_t msgbuf;
+  	mymsg_t msgbuf;
 	struct msqid_ds msgstat;
 	FILE *fd;
 
@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
 	int numproc = 10, slavecount = 0, numrunning = 0, maxslaves = 50;
 	int i, c, msgsize;
 	double curtime; 
-  double run_time = 5.0; //maximum time the program will run in realtime 
+  	double run_time = 5.0; //maximum time the program will run in realtime 
 	char outfile[20] = "test.out";
     
 	/* Parse command line options */
@@ -53,10 +53,10 @@ int main(int argc, char **argv) {
 
 			case 'h':
 				fprintf(stderr, "\nUsage: %s: [-h] [-s number] [-n number] [-l filename] [-t number] \n"
-							"    -s number: Number of initial slaves to spawn (default: 5)\n"
-							"    -n number: Max number of total slaves spawned (default 50)\n"
-							"    -l filename: The log file used (default: test.out)\n"
-							"    -t number: The time in seconds when the master will terminate itself (default: 5) \n", argv[0]+2);
+						"    -s number: Number of initial slaves to spawn (default: 5)\n"
+						"    -n number: Max number of total slaves spawned (default 50)\n"
+						"    -l filename: The log file used (default: test.out)\n"
+						"    -t number: The time in seconds when the master will terminate itself (default: 5) \n", argv[0]+2);
 				return 0;
 				break;
 			case 's':
@@ -85,19 +85,18 @@ int main(int argc, char **argv) {
 	/* Allocate and attatch to shared memory segment */
 	if ((shmid = shmget(ftok(".", 'K'), sizeof(logicalClock_t), IPC_CREAT | PERM)) < 0) {
 		fprintf(stderr, "shmget: master failed to allocate shared memory segment\n");
-    	exit(1);
+    		exit(1);
 	}
 
-    if ((log_clock = (logicalClock_t *) shmat(shmid, NULL, 0)) == (void *) -1) {
+   	 if ((log_clock = (logicalClock_t *) shmat(shmid, NULL, 0)) == (void *) -1) {
 
    		fprintf(stderr, "shmat: master failed to attach to shared memory segment\n");
 		if (shmctl(shmid, IPC_RMID, NULL) == -1)
 			fprintf(stderr, "master failed to remove shared memory segment\n");
 		else
 			fprintf(stderr, "master successfully deallocated shared memory\n");
-       	
-		exit(1);
-    }
+       		exit(1);
+    	}
 
 	/* Create Message Queue */
 	if ( (msqid = msgget(1234, PERM | IPC_CREAT)) < 0 ) {
@@ -109,7 +108,7 @@ int main(int argc, char **argv) {
 	log_clock->sec = 0;
 	log_clock->nsec = 0;
 
-  //creates and starts a real-time timer of the max program run time
+  	//creates and starts a real-time timer of the max program run time
 	startTimer(run_time);
 
 	/* Spawn Initial child processes */
@@ -141,7 +140,7 @@ int main(int argc, char **argv) {
 		if (log_clock->sec == 2)
 			break; 
 		
-    //check for any messages in the queue
+    		//check for any messages in the queue
 		if ( (msgsize = msgrcv(msqid, &msgbuf, 80, term, IPC_NOWAIT)) > 0) {
 			
 			msgctl(msqid, IPC_STAT, &msgstat);
