@@ -28,26 +28,26 @@ int main (int argc, char **argv) {
 	logicalClock_t *log_clock;
 	mymsg_t msgbuf;
 	id = atoi(argv[1]);	
-  int shmid, msqid;
-  int len, quit = 0;
+  	int shmid, msqid;
+  	int len, quit = 0;
 	unsigned long curtime, termtime;
 		
 	key_t key = ftok(".",'K'); //Same key as master process
 
 	/* Get and attatch to shared memory segment */
 	if ((shmid = shmget(key, sizeof(logicalClock_t *), 0)) < 0) {
-        fprintf(stderr, "shget:child failed to get the shared memory segment\n");
-        exit(1);
-    }
+        	fprintf(stderr, "shget:child failed to get the shared memory segment\n");
+       	 	exit(1);
+    	}
 	
 	if ((log_clock = shmat(shmid, NULL, SHM_RDONLY)) == (void *) -1) {
-        fprintf(stderr, "shmat:child failed attatching to shared memory\n");
-        exit(1);
-    }
+        	fprintf(stderr, "shmat:child failed attatching to shared memory\n");
+        	exit(1);
+    	}
 	
 	/* Get the Message Queue */
 	if ((msqid = msgget(1234, 0666)) < 0) {
-    	fprintf(stderr, "smget:child %d failed to get msg queue\n", id);
+    		fprintf(stderr, "smget:child %d failed to get msg queue\n", id);
 	  	exit(0);
 	}
 
@@ -79,7 +79,7 @@ int main (int argc, char **argv) {
 				msgsnd(msqid, &msgbuf, len, 0);
 				quit = 1;
 
-			 /* Process blocks until the master sends a "done" message
+			 	/* Process blocks until the master sends a "done" message
 			 	* to ensure that this process' pid is the current `msqid_ds lspid' 
  		 		* when the master is processing the "term" message
  				*/
@@ -87,12 +87,12 @@ int main (int argc, char **argv) {
 				break;	
 			}
 		}	
-    /*** Exit Section ***/
+    		/*** Exit Section ***/
 		msgbuf.mtype = mutex;
 		strcpy(msgbuf.mtext, "\0");
 		len = 1;
 		msgsnd(msqid, &msgbuf, len, IPC_NOWAIT);
-}
+	}
 
 	/* Detatch from shared memory and exit. */
 	if (shmdt(log_clock) == -1) {
