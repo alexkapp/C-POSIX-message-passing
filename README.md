@@ -4,6 +4,7 @@ Uses the C POSIX library for shared memory and message passing to enforce mutual
 - Kernel: Linux 
 - Version: 3.10.0-514.2.2.el7.x86_64 (builder@kbuilder.dev.centos.org) (gcc version 4.8.5 20150623 (Red Hat 4.8.5-11) (GCC) ) #1 SMP Tue Dec 6 23:06:41 UTC 2016 
 <br>
+
 # master.c
 ### The main program, which serves as the master process
 This program starts off by first allocating shared memory for a logical clock that only it can increment, but can 
